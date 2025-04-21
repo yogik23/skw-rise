@@ -58,6 +58,23 @@ async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, 
   return null;
 }
 
+async function approve(wallet, fromTokenAddress, amountIn) {
+  const fromSymbol = tokenNames[fromTokenAddress] || fromTokenAddress;
+  const SPENDER  = "0x143bE32C854E4Ddce45aD48dAe3343821556D0c3";
+  const approve_ABI = [
+      "function approve(address spender, uint256 amount) external returns (bool)",
+      "function allowance(address owner, address spender) view returns (uint256)"
+  ];
+  const token = new ethers.Contract(fromTokenAddress, approve_ABI, wallet);
+  const allowance = await token.allowance(wallet.address, SPENDER );
+  if (allowance < amountIn) {
+    console.log(chalk.hex('#20B2AA')(`🔓 Approving ${fromSymbol}...`));
+    const tx = await token.approve(ROUTER, ethers.MaxUint256);
+    await tx.wait();
+    console.log(`✅ Approved ${tokenAddress}`);
+  }
+}
+
 async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
   const routeData = await getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress);
   if (!routeData) {
@@ -97,6 +114,7 @@ async function main() {
     console.log(chalk.cyan(`🔑 Wallet: ${wallet.address}\n`));
 
     for (const pair of swapPairs) {
+      await approve(wallet, pair.from, pair.amount);
       await swap(wallet, pair.amount, pair.from, pair.to);
       await delay(5000);
     }
