@@ -99,13 +99,15 @@ async function deposit(wallet) {
 
 async function withdraw(wallet) {
   try {
-    const amountunwarp = "0.05";
+    const unwarpamount = "0.05";
+    const amount = ethers.parseUnits(unwarpamount, 18); 
     const unwarp_abi = ["function OwnerTransferV7b711143(uint256) external"];
     const contract = new ethers.Contract(WETH_ADDRESS, unwarp_abi, wallet);
 
-    console.log(chalk.hex('#20B2AA')(`🔁 Unwarp ${amountunwarp} ETH → ${amountunwarp} WETH`));
+    console.log(chalk.hex('#20B2AA')(`🔁 Unwarp ${unwarpamount} ETH → ${unwarpamount} WETH`));
 
-    const amount = ethers.parseUnits(amountunwarp, 18); 
+    await approve(wallet, WETH_ADDRESS, amount);
+
     const tx = await contract.OwnerTransferV7b711143(amount, {
       gasLimit: 100_000,
     });
