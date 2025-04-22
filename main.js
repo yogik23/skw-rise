@@ -3,6 +3,7 @@ const { ethers } = require('ethers');
 const fs = require("fs");
 const path = require("path");
 const chalk = require('chalk');
+const { displayskw } = require('./skw/displayskw');
 
 const {
   WETH_ADDRESS,
@@ -77,18 +78,43 @@ async function approve(wallet, fromTokenAddress, amountIn) {
 
 async function deposit(wallet) {
   try {
+    const amount = "0.1";
     const warp_abi = ["function deposit() external payable"];
     const contract = new ethers.Contract(WETH_ADDRESS, warp_abi, wallet);
+
+    console.log(chalk.hex('#20B2AA')(`🔁 Warp ${amount} WETH → ${amount} ETH`));
+
     const tx = await contract.deposit({
-      value: ethers.parseEther("0.1"),
+      value: ethers.parseEther(amount),
       gasLimit: 100_000,
     });
 
-    console.log(chalk.hex('#FF8C00')("Tx sent:", tx.hash));
+    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     const receipt = await tx.wait();
-    console.log(chalk.hex('#66CDAA')("Tx mined:", receipt.transactionHash));
+    console.log(chalk.hex('#66CDAA')(`✅ Warp successful\n`));
   } catch (err) {
     console.log(chalk.red("❌ Error during deposit:"), err.reason || err.message);
+  }
+}
+
+async function withdraw(wallet) {
+  try {
+    const amountunwarp = "0.05";
+    const unwarp_abi = ["function OwnerTransferV7b711143(uint256) external"];
+    const contract = new ethers.Contract(WETH_ADDRESS, unwarp_abi, wallet);
+
+    console.log(chalk.hex('#20B2AA')(`🔁 Unwarp ${amountunwarp} ETH → ${amountunwarp} WETH`));
+
+    const amount = ethers.parseUnits(amountunwarp, 18); 
+    const tx = await contract.OwnerTransferV7b711143(amount, {
+      gasLimit: 100_000,
+    });
+
+    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    const receipt = await tx.wait();
+    console.log(chalk.hex('#66CDAA')(`✅ Unwarp successful\n`));
+  } catch (err) {
+    console.log(chalk.red("❌ Error during withdraw:"), err.reason || err.message);
   }
 }
 
@@ -125,11 +151,15 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
 
 async function main() {
   console.clear();
-
+  displayskw();
+  
   for (const privateKey of privateKeys) {
     const wallet = new ethers.Wallet(privateKey, provider);
     console.log(chalk.cyan(`🔑 Wallet: ${wallet.address}\n`));
     await deposit(wallet);
+    await delay(3000);
+    await withdraw(wallet);
+    await delay(3000);
 
     for (const pair of swapPairs) {
       await approve(wallet, pair.from, pair.amount);
