@@ -26,7 +26,7 @@ const privateKeys = fs.readFileSync(path.join(__dirname, "privatekey.txt"), "utf
   .map(k => k.trim())
   .filter(k => k.length > 0);
 
-async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, retries = 3) {
+async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, retries = 5) {
   const now = Math.floor(Date.now() / 1000);
   const deadline = now + 60 * 1;
   const amount = ethers.parseUnits(amountIn.toString(), 18).toString();
@@ -52,7 +52,7 @@ async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, 
 
     if (i < retries) {
       console.log(chalk.hex('#FF8C00')(`🔁 Mencoba Ulang ${i + 1}...`));
-      await delay(3000);
+      await delay(4000);
     }
   }
   return null;
