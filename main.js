@@ -158,14 +158,14 @@ async function main() {
     console.log(chalk.cyan(`🔑 Wallet: ${wallet.address}\n`));
     await deposit(wallet);
     await delay(3000);
-    await withdraw(wallet);
-    await delay(3000);
-
+    
     for (const pair of swapPairs) {
       await approve(wallet, pair.from, pair.amount);
       await swap(wallet, pair.amount, pair.from, pair.to);
-      await delay(5000);
+      await delay(3000);
     }
+    await withdraw(wallet);
+    await delay(3000);
   }
 }
 
