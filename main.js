@@ -71,7 +71,24 @@ async function approve(wallet, fromTokenAddress, amountIn) {
     console.log(chalk.hex('#20B2AA')(`🔓 Approving ${fromSymbol}...`));
     const tx = await token.approve(ROUTER, ethers.MaxUint256);
     await tx.wait();
-    console.log(`✅ Approved ${tokenAddress}`);
+    console.log(chalk.hex('#66CDAA')(`✅ Approved ${tokenAddress}`));
+  }
+}
+
+async function deposit(wallet) {
+  try {
+    const warp_abi = ["function deposit() external payable"];
+    const contract = new ethers.Contract(WETH_ADDRESS, warp_abi, wallet);
+    const tx = await contract.deposit({
+      value: ethers.parseEther("0.0001"),
+      gasLimit: 100_000,
+    });
+
+    console.log(chalk.hex('#FF8C00')("Tx sent:", tx.hash));
+    const receipt = await tx.wait();
+    console.log(chalk.hex('#66CDAA')("Tx mined:", receipt.transactionHash));
+  } catch (err) {
+    console.log(chalk.red("❌ Error during deposit:"), err.reason || err.message);
   }
 }
 
@@ -112,6 +129,7 @@ async function main() {
   for (const privateKey of privateKeys) {
     const wallet = new ethers.Wallet(privateKey, provider);
     console.log(chalk.cyan(`🔑 Wallet: ${wallet.address}\n`));
+    await deposit(wallet);
 
     for (const pair of swapPairs) {
       await approve(wallet, pair.from, pair.amount);
