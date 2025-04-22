@@ -80,7 +80,7 @@ async function deposit(wallet) {
     const warp_abi = ["function deposit() external payable"];
     const contract = new ethers.Contract(WETH_ADDRESS, warp_abi, wallet);
     const tx = await contract.deposit({
-      value: ethers.parseEther("0.0001"),
+      value: ethers.parseEther("0.1"),
       gasLimit: 100_000,
     });
 
