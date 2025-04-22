@@ -72,7 +72,7 @@ async function approve(wallet, fromTokenAddress, amountIn) {
     console.log(chalk.hex('#20B2AA')(`🔓 Approving ${fromSymbol}...`));
     const tx = await token.approve(SPENDER, ethers.MaxUint256);
     await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Approved ${tokenAddress}`));
+    console.log(chalk.hex('#66CDAA')(`✅ Success Approved ${fromSymbol}`));
   }
 }
 
