@@ -149,11 +149,18 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
 
 async function addLiquidity(wallet) {
   try {
+    const CEK_BALANCEUSDT = await checkBalance(wallet, USDT_ADDRESS);
+    const BALANCEUSDT = parseFloat(CEK_BALANCEUSDT).toFixed(4);
+    console.log(chalk.hex('#20B2AA')(`💰 Saldo USDT: ${BALANCEUSDT}`));
+    const CEK_BALANCEUSDC = await checkBalance(wallet, USDC_ADDRESS);
+    const BALANCEUSDC = parseFloat(CEK_BALANCEUSDC).toFixed(4);
+    console.log(chalk.hex('#20B2AA')(`💰 Saldo USDC: ${BALANCEUSDC}`));
+    
     const dspAddress = "0x8eB78173A8A4b53BC694490b9991145Fdc461099";
-    const baseInAmount = "999900";
-    const quoteInAmount = "101160032";
-    const baseMinAmount = "998900";
-    const quoteMinAmount = "101058871";
+    const baseInAmount = "1100000";
+    const quoteInAmount = "111248871";
+    const baseMinAmount = "1098900";
+    const quoteMinAmount = "111137622";
     const flag = 0;
     const deadline = BigInt(Math.floor(Date.now() / 1000) + 600);
 
