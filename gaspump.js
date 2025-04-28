@@ -12,6 +12,7 @@ const {
   MOG_ADDRESS,
   RISE_ADDRESS,
   WBTC_ADDRESS,
+  checkBalance,
   erc20_abi,
   tokenNames,
   tokenDecimals,
@@ -100,6 +101,10 @@ async function deposit(wallet) {
 
 async function withdraw(wallet) {
   try {
+    const WETHBALANCE = await checkBalance(wallet, WETH_ADDRESS);
+    const balanceFormatted = parseFloat(WETHBALANCE).toFixed(4);
+    console.log(chalk.hex('#20B2AA')(`💰 Saldo WETH: ${balanceFormatted}`));
+
     const unwarpamount = "0.00005";
     const amount = ethers.parseUnits(unwarpamount, 18); 
     const unwarp_abi = ["function OwnerTransferV7b711143(uint256) external"];
@@ -122,17 +127,21 @@ async function withdraw(wallet) {
 }
 
 async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
+  const toSymbol = tokenNames[toTokenAddress] || toTokenAddress;
+  const fromSymbol = tokenNames[fromTokenAddress] || fromTokenAddress;
+
+  const CEK_BALANCE = await checkBalance(wallet, fromTokenAddress);
+  const BALANCE = parseFloat(CEK_BALANCE).toFixed(4);
+  console.log(chalk.hex('#20B2AA')(`💰 Saldo ${fromSymbol}: ${BALANCE}`));
+
   const routeData = await getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress);
   if (!routeData) {
     console.log(chalk.hex('#FF6347')(`❌ Failed to get route data\n`));
     return;
   }
 
-  const resAmount = routeData.resAmount;
-  const toSymbol = tokenNames[toTokenAddress] || toTokenAddress;
-  const fromSymbol = tokenNames[fromTokenAddress] || fromTokenAddress;
   const toDecimals = tokenDecimals[toTokenAddress] || 18;
-  const formattedAmount = parseFloat(routeData.resAmount).toFixed(2);
+  const formattedAmount = (Number(routeData.resAmount) / 10 ** toDecimals).toFixed(4);
 
   console.log(chalk.hex('#20B2AA')(`🔁 Swap ${amountIn} ${fromSymbol} → ${formattedAmount} ${toSymbol}`));
 
@@ -140,8 +149,8 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
     const tx = await wallet.sendTransaction({
       to: routeData.targetContract,
       data: routeData.txData,
-      value: ethers.parseEther("0"),
-      gasLimit: 300000
+      value: fromTokenAddress === ethers.ZeroAddress ? ethers.parseEther(amountIn) : ethers.parseEther("0"), // kalau native token, kirim value
+      gasLimit: 300_000
     });
 
     console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
@@ -175,7 +184,10 @@ async function mintNFT(wallet) {
 async function main() {
   for (const privateKey of privateKeys) {
     const wallet = new ethers.Wallet(privateKey, provider);
-    console.log(chalk.cyan(`🔑 Wallet: ${wallet.address}\n`));
+    console.log(chalk.cyan(`🔑 Wallet: ${wallet.address}`));
+    const balance = await provider.getBalance(wallet.address);
+    const ethBalance = ethers.formatEther(balance);
+    console.log(chalk.hex('#20B2AA')(`💰 Saldo ETH: ${ethBalance}`));
     await deposit(wallet);
     await delay(3000);
     
