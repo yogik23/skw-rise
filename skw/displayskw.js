@@ -17,6 +17,8 @@ function displayskw() {
   console.log(chalk.hex('#00CED1')(" ║ ➤   Auto Warp & Unwarp                                       ║"));
   console.log(chalk.hex('#00CED1')(" ║ ➤   Auto Swap Token                                          ║"));
   console.log(chalk.hex('#00CED1')(" ║ ➤   Auto Add, Remove LP                                      ║"));
+  console.log(chalk.hex('#00CED1')(" ║ ➤   Auto Supply, Borrow, Lending                             ║"));
+  console.log(chalk.hex('#00CED1')(" ║ ➤   Auto Mint NFT                                            ║"));
   console.log(chalk.hex('#00CED1')(" ║ ➤   Multi Akun                                               ║"));
   console.log(chalk.hex('#00CED1')(" ║ ➤   Sudah Pasti Elig                                         ║"));
   console.log(chalk.hex('#00CED1')(" ╚══════════════════════════════════════════════════════════════╝"));
