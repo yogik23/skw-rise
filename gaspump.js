@@ -193,17 +193,23 @@ async function swapmain() {
     const balance = await provider.getBalance(wallet.address);
     const ethBalance = ethers.formatEther(balance);
     console.log(chalk.hex('#20B2AA')(`💰 Saldo ETH: ${ethBalance}`));
+
+    console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
     await deposit(wallet);
     await delay(3000);
     
     for (const pair of swapPairs) {
+      console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
       await approve(wallet, pair.from, pair.amount);
       await swap(wallet, pair.amount, pair.from, pair.to);
       await delay(3000);
     }
+    
+    console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
     await withdraw(wallet);
     await delay(3000);
 
+    console.log(chalk.hex('#66CDAA')(`🚀 MINT NFT DI OMNIHUB`));
     await mintNFT(wallet);
     await delay(3000);
 
