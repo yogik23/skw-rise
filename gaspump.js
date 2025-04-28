@@ -13,12 +13,11 @@ const {
   MOG_ADDRESS,
   RISE_ADDRESS,
   WBTC_ADDRESS,
+  erc20_abi,
   tokenNames,
   tokenDecimals,
   swapPairs,
   delay,
-  warpamount,
-  unwarpamount,
 } = require('./skw/config');
 
 const RPC = "https://testnet.riselabs.xyz";
@@ -75,13 +74,14 @@ async function approve(wallet, fromTokenAddress, amountIn) {
   }
 }
 
-async function deposit(wallet, warpamount) {
+async function deposit(wallet) {
   try {
-    const amount = ethers.parseEther(warpamount);
+    const warpamount = "0.001";
+    const amount = ethers.parseUnits(warpamount);
     const warp_abi = ["function deposit() external payable"];
     const contract = new ethers.Contract(WETH_ADDRESS, warp_abi, wallet);
 
-    console.log(chalk.hex('#20B2AA')(`🔁 Warp ${warpamount} WETH → ${warpamount} ETH`));
+    console.log(chalk.hex('#20B2AA')(`🔁 Warp ${warpamount} ETH → ${warpamount} WETH`));
 
     const tx = await contract.deposit({
       value: amount,
@@ -96,13 +96,14 @@ async function deposit(wallet, warpamount) {
   }
 }
 
-async function withdraw(wallet, unwarpamount) {
+async function withdraw(wallet) {
   try {
+    const unwarpamount = "0.00005";
     const amount = ethers.parseUnits(unwarpamount, 18); 
     const unwarp_abi = ["function OwnerTransferV7b711143(uint256) external"];
     const contract = new ethers.Contract(WETH_ADDRESS, unwarp_abi, wallet);
 
-    console.log(chalk.hex('#20B2AA')(`🔁 Unwarp ${unwarpamount} ETH → ${unwarpamount} WETH`));
+    console.log(chalk.hex('#20B2AA')(`🔁 Unwarp ${unwarpamount} WETH → ${unwarpamount} ETH`));
 
     await approve(wallet, WETH_ADDRESS, amount);
 
