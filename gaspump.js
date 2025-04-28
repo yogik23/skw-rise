@@ -98,7 +98,7 @@ async function withdraw(wallet) {
 
     console.log(chalk.hex('#20B2AA')(`🔁 Unwarp ${unwarpamount} WETH → ${unwarpamount} ETH`));
 
-    await approve(wallet, WETH_ADDRESS, swap_ROUTER, amount);
+    await approve(wallet, WETH_ADDRESS, amount, swap_ROUTER);
 
     const tx = await contract.OwnerTransferV7b711143(amount, {
       gasLimit: 100_000,
@@ -242,12 +242,31 @@ async function swapmain() {
     const ethBalance = ethers.formatEther(balance);
     console.log(chalk.hex('#20B2AA')(`💰 Saldo ETH: ${ethBalance}`));
 
+    console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
+    await deposit(wallet);
+    await delay(3000);
+    
+    for (const pair of swapPairs) {
+      console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
+      await approve(wallet, pair.from, pair.amount, swap_ROUTER);
+      await swap(wallet, pair.amount, pair.from, pair.to);
+      await delay(3000);
+    }
+
     console.log(chalk.hex('#66CDAA')(`🚀 ADD LIQUIDITY di GASPUMP`));
     await addLiquidity(wallet);
     await delay(3000);
 
     console.log(chalk.hex('#66CDAA')(`🚀 REMOVE LIQUIDITY di GASPUMP`));
     await rmLiquidity(wallet);
+    await delay(3000);
+
+    console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
+    await withdraw(wallet);
+    await delay(3000);
+
+    console.log(chalk.hex('#66CDAA')(`🚀 MINT NFT DI OMNIHUB`));
+    await mintNFT(wallet);
     await delay(3000);
 
   }
