@@ -153,6 +153,24 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
   }
 }
 
+async function mintNFT(wallet) {
+  try {
+    const NFTca = "0xA1B0F32b81E2d085Aba3e69B19eC72466F0eFA83";
+    const mintnft_abi = ["function mint(uint256 amount) public"];
+    const mintnftca = new ethers.Contract(NFTca, mintnft_abi, wallet);
+
+    console.log(chalk.hex('#20B2AA')(`🔁 Mint NFT`));
+
+    const tx = await mintnftca.mint(
+      1,
+      { gasLimit: 500_000 }
+    );
+    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    await tx.wait();
+    console.log(chalk.hex('#66CDAA')(`✅ Mint NFT sukses!\n`));
+
+}
+
 async function main() {
   console.clear();
   displayskw();
@@ -170,6 +188,10 @@ async function main() {
     }
     await withdraw(wallet);
     await delay(3000);
+
+    await mintNFT(wallet);
+    await delay(3000);
+
   }
 }
 
