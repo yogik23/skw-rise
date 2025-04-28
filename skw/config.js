@@ -1,8 +1,6 @@
 const { ethers } = require('ethers');
 const chalk = require('chalk');
 
-const unwarpamount = "0.00005";
-const warpamount = "0.001";
 const supplyWETH = "0.0001";
 const borrowUSDT = "0.001";
 const wdETHAmount = "0.00001";
