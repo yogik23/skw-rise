@@ -8,16 +8,16 @@ const {
   WETH_ADDRESS,
   USDC_ADDRESS,
   USDT_ADDRESS,
-  PEPE_ADDRESS,
-  MOG_ADDRESS,
-  RISE_ADDRESS,
-  WBTC_ADDRESS,
+  lp_ROUTER,
+  swap_ROUTER,
+  rm_ROUTER,
   checkBalance,
-  erc20_abi,
+  Liquidity_abi,
   tokenNames,
   tokenDecimals,
   swapPairs,
   delay,
+  approve,
 } = require('./skw/config');
 
 const RPC = "https://testnet.riselabs.xyz";
@@ -63,20 +63,6 @@ async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, 
   return null;
 }
 
-async function approve(wallet, fromTokenAddress, amountIn) {
-  const fromSymbol = tokenNames[fromTokenAddress] || fromTokenAddress;
-  const SPENDER  = "0x143bE32C854E4Ddce45aD48dAe3343821556D0c3";
-
-  const token = new ethers.Contract(fromTokenAddress, erc20_abi, wallet);
-  const allowance = await token.allowance(wallet.address, SPENDER );
-  if (allowance < amountIn) {
-    console.log(chalk.hex('#20B2AA')(`🔓 Approving ${fromSymbol}...`));
-    const tx = await token.approve(SPENDER, ethers.MaxUint256);
-    await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Approved ${fromSymbol}`));
-  }
-}
-
 async function deposit(wallet) {
   try {
     const warpamount = "0.001";
@@ -112,7 +98,7 @@ async function withdraw(wallet) {
 
     console.log(chalk.hex('#20B2AA')(`🔁 Unwarp ${unwarpamount} WETH → ${unwarpamount} ETH`));
 
-    await approve(wallet, WETH_ADDRESS, amount);
+    await approve(wallet, WETH_ADDRESS, swap_ROUTER, amount);
 
     const tx = await contract.OwnerTransferV7b711143(amount, {
       gasLimit: 100_000,
@@ -161,6 +147,69 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
   }
 }
 
+async function addLiquidity(wallet) {
+  try {
+    const dspAddress = "0x8eB78173A8A4b53BC694490b9991145Fdc461099";
+    const baseInAmount = "999900";
+    const quoteInAmount = "101160032";
+    const baseMinAmount = "998900";
+    const quoteMinAmount = "101058871";
+    const flag = 0;
+    const deadline = BigInt(Math.floor(Date.now() / 1000) + 600);
+
+    await approve(wallet, USDC_ADDRESS, lp_ROUTER, quoteInAmount);
+    await approve(wallet, USDT_ADDRESS, lp_ROUTER, baseInAmount)
+
+    console.log(chalk.hex('#20B2AA')(`🔁 Add Liquidity 1 USDC → 1 USDT`));
+    const contract = new ethers.Contract(lp_ROUTER, Liquidity_abi, wallet);
+    const tx = await contract.addDSPLiquidity(
+      dspAddress,
+      baseInAmount,
+      quoteInAmount,
+      baseMinAmount,
+      quoteMinAmount,
+      flag,
+      deadline
+    );
+
+    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    await tx.wait();
+    console.log(chalk.hex('#66CDAA')(`✅ Add Liquidity successful\n`));
+  } catch (error) {
+    console.error(chalk.red(`❌ Error in addLiquidity: ${error.message || error}`));
+  }
+}
+
+async function rmLiquidity(wallet) {
+  try {
+    const shareAmount = "005418";
+    const address_to = wallet.address;
+    const baseMinAmount = "998899";
+    const quoteMinAmount = "101039252";
+    const data = "0x";
+    const deadline = BigInt(Math.floor(Date.now() / 1000) + 600);
+
+    console.log(chalk.hex('#20B2AA')(`🔁 REMOVE Liquidity 1 USDC → 1 USDT`));
+    const contract = new ethers.Contract(rm_ROUTER, Liquidity_abi, wallet);
+    const tx = await contract.sellShares(
+      shareAmount,
+      address_to,
+      baseMinAmount,
+      quoteInAmount,
+      quoteMinAmount,
+      data,
+      flag,
+      deadline
+    );
+
+    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    await tx.wait();
+    console.log(chalk.hex('#66CDAA')(`✅ REMOVE Liquidity successful\n`));
+  } catch (error) {
+    console.error(chalk.red(`❌ Error in addLiquidity: ${error.message || error}`));
+  }
+}
+
 async function mintNFT(wallet) {
   try {
     const NFTca = "0xA1B0F32b81E2d085Aba3e69B19eC72466F0eFA83";
@@ -194,23 +243,12 @@ async function swapmain() {
     const ethBalance = ethers.formatEther(balance);
     console.log(chalk.hex('#20B2AA')(`💰 Saldo ETH: ${ethBalance}`));
 
-    console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
-    await deposit(wallet);
-    await delay(3000);
-    
-    for (const pair of swapPairs) {
-      console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
-      await approve(wallet, pair.from, pair.amount);
-      await swap(wallet, pair.amount, pair.from, pair.to);
-      await delay(3000);
-    }
-    
-    console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
-    await withdraw(wallet);
+    console.log(chalk.hex('#66CDAA')(`🚀 ADD LIQUIDITY di GASPUMP`));
+    await addLiquidity(wallet);
     await delay(3000);
 
-    console.log(chalk.hex('#66CDAA')(`🚀 MINT NFT DI OMNIHUB`));
-    await mintNFT(wallet);
+    console.log(chalk.hex('#66CDAA')(`🚀 REMOVE LIQUIDITY di GASPUMP`));
+    await rmLiquidity(wallet);
     await delay(3000);
 
   }
