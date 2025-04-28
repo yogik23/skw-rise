@@ -151,9 +151,6 @@ async function withdrawETH(wallet, wdETHAmount) {
 }
 
 async function main() {
-  console.clear();
-  displayskw();
-  
   for (const privateKey of privateKeys) {
     const wallet = new ethers.Wallet(privateKey, provider);
     console.log(chalk.cyan(`🔑 Wallet: ${wallet.address}\n`));
