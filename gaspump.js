@@ -181,7 +181,7 @@ async function mintNFT(wallet) {
   }
 }
 
-async function main() {
+async function swapmain() {
   for (const privateKey of privateKeys) {
     const wallet = new ethers.Wallet(privateKey, provider);
     console.log(chalk.cyan(`🔑 Wallet: ${wallet.address}`));
@@ -205,4 +205,8 @@ async function main() {
   }
 }
 
-main();
+module.exports = { swapmain };
+
+if (require.main === module) {
+  swapmain();
+}
