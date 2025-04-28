@@ -167,7 +167,9 @@ async function mintNFT(wallet) {
     console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     await tx.wait();
     console.log(chalk.hex('#66CDAA')(`✅ Mint NFT sukses!\n`));
-
+  } catch (err) {
+    console.error("❌ Mint NFT failed:", err.reason || err.message);
+  }
 }
 
 async function main() {
