@@ -8,6 +8,7 @@ const {
   WETH_ADDRESS,
   USDC_ADDRESS,
   USDT_ADDRESS,
+  DLP_ADDRESS,
   lp_ROUTER,
   swap_ROUTER,
   rm_ROUTER,
@@ -190,6 +191,10 @@ async function addLiquidity(wallet) {
 
 async function rmLiquidity(wallet) {
   try {
+    const CEK_BALANCELP = await checkBalance(wallet, DLP_ADDRESS);
+    const BALANCELP = parseFloat(CEK_BALANCELP).toFixed(4);
+    console.log(chalk.hex('#20B2AA')(`💰 Saldo DLP: $${BALANCELP}`));
+    
     const shareAmount = "1005418";
     const address_to = wallet.address;
     const baseMinAmount = "998899";
