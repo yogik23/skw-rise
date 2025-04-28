@@ -9,6 +9,7 @@ const {
   inari_ROUTER,
   erc20_abi,
   inari_abi,
+  checkBalance,
   delay,
   wdETHAmount,
   borrowUSDT,
@@ -36,6 +37,10 @@ async function approve(wallet, fromTokenAddress, SPENDER, amountIn) {
 
 async function supply(wallet, supplyWETH) {
   try {
+    const WETHBALANCE = await checkBalance(wallet, WETH_ADDRESS);
+    const balanceFormatted = parseFloat(WETHBALANCE).toFixed(4);
+    console.log(chalk.hex('#20B2AA')(`💰 Saldo WETH: ${balanceFormatted}`));
+
     const amount = ethers.parseUnits(supplyWETH, 18);
     const supplyca = new ethers.Contract(inari_ROUTER, inari_abi, wallet);
 
@@ -60,7 +65,11 @@ async function supply(wallet, supplyWETH) {
 
 async function borrow(wallet, borrowUSDT) {
   try {
-    const amount = ethers.parseUnits(borrowUSDT, 8); // <- ini betul sekarang
+    const USDTBALANCE = await checkBalance(wallet, USDT_ADDRESS);
+    const balanceFormatted = parseFloat(USDTBALANCE).toFixed(4);
+    console.log(chalk.hex('#20B2AA')(`💰 Saldo USDT: ${balanceFormatted}`));
+
+    const amount = ethers.parseUnits(borrowUSDT, 8);
     const borrowca = new ethers.Contract(inari_ROUTER, inari_abi, wallet);
 
     console.log(chalk.hex('#20B2AA')(`🔁 Borrow ${borrowUSDT} USDT`));
@@ -152,7 +161,6 @@ async function withdrawETH(wallet, wdETHAmount) {
 async function main() {
   for (const privateKey of privateKeys) {
     const wallet = new ethers.Wallet(privateKey, provider);
-    console.log(chalk.cyan(`🔑 Wallet: ${wallet.address}\n`));
 
     await supply(wallet, supplyWETH);
     await delay(3000);
