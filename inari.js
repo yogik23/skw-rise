@@ -72,6 +72,7 @@ async function borrow(wallet, borrowUSDT) {
     const amount = ethers.parseUnits(borrowUSDT, 8);
     const borrowca = new ethers.Contract(inari_ROUTER, inari_abi, wallet);
 
+    await setCollateral(wallet, true);
     console.log(chalk.hex('#20B2AA')(`🔁 Borrow ${borrowUSDT} USDT`));
 
     const tx = await borrowca.borrow(
@@ -114,35 +115,37 @@ async function repay(wallet) {
   }
 }
 
-async function Collateral(wallet) {
+async function setCollateral(wallet, useAsCollateral = true) {
   try {
     const collateralca = new ethers.Contract(inari_ROUTER, inari_abi, wallet);
-    console.log(chalk.hex('#20B2AA')(`🔁 Remove Collateral `));
+    
+    const action = useAsCollateral ? "Set" : "Remove";
+    console.log(chalk.hex('#20B2AA')(`🔁 ${action} Collateral`));
 
     const tx = await collateralca.setUserUseReserveAsCollateral(
       WETH_ADDRESS,
-      false,
+      useAsCollateral,
       { gasLimit: 500_000 }
     );
 
     console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Remove Collateral sukses!\n`));
+    console.log(chalk.hex('#66CDAA')(`✅ ${action} Collateral sukses!\n`));
   } catch (err) {
-    console.log(chalk.red("❌ Error saat Repay:"), err.reason || err.message);
+    console.log(chalk.red(`❌ Error saat ${useAsCollateral ? "Set" : "Remove"} Collateral:`), err.reason || err.message);
   }
 }
+
 
 async function withdrawETH(wallet, wdETHAmount) {
   try {
     const amount = ethers.parseUnits(wdETHAmount, 18);
     const withdrawca = new ethers.Contract(inari_ROUTER, inari_abi, wallet);
 
-    console.log(chalk.hex('#20B2AA')(`🔁 Withdraw ${wdETHAmount} ETH`));
-
-    await Collateral(wallet);
     await approve(wallet, WETH_ADDRESS, inari_ROUTER, amount);
+    await setCollateral(wallet, false);
 
+    console.log(chalk.hex('#20B2AA')(`🔁 Withdraw ${wdETHAmount} ETH`));
     const tx = await withdrawca.withdraw(
       WETH_ADDRESS,
       amount,
@@ -162,15 +165,19 @@ async function lendingmain() {
   for (const privateKey of privateKeys) {
     const wallet = new ethers.Wallet(privateKey, provider);
 
+    console.log(chalk.hex('#66CDAA')(`🚀 SUPPLY KE INARI`));
     await supply(wallet, supplyWETH);
     await delay(3000);
 
+    console.log(chalk.hex('#66CDAA')(`🚀 BORROW KE INARI`));
     await borrow(wallet, borrowUSDT);
     await delay(3000);
 
+    console.log(chalk.hex('#66CDAA')(`🚀 REPAY KE INARI`));
     await repay(wallet);
     await delay(3000);
 
+    console.log(chalk.hex('#66CDAA')(`🚀 WITHDRAW DARI INARI`));
     await withdrawETH(wallet, wdETHAmount);
     await delay(3000);
   }
