@@ -13,6 +13,7 @@ const {
   tokenNames,
   tokenDecimals,
   swapPairs,
+  delay,
   approve
 } = require('./config');
 
@@ -58,6 +59,39 @@ async function withdraw(wallet, unwarpamount) {
     console.log(chalk.red("❌ Error during withdraw:"), err.reason || err.message);
   }
 }
+
+async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, retries = 5) {
+  const now = Math.floor(Date.now() / 1000);
+  const deadline = now + 60 * 1;
+  const amount = ethers.parseUnits(amountIn.toString(), 18).toString();
+  const url = `https://api.dodoex.io/route-service/v2/widget/getdodoroute?chainId=11155931&deadLine=${deadline}&apikey=a37546505892e1a952&slippage=5&source=dodoV2AndMixWasm&toTokenAddress=${toTokenAddress}&fromTokenAddress=${fromTokenAddress}&userAddr=${wallet.address}&estimateGas=true&fromAmount=${amount}`;
+
+  console.log(chalk.hex('#7B68EE')(`🔍 Mendapatkan Kuota Swap`));
+  for (let i = 0; i <= retries; i++) {
+    try {
+      const res = await axios.get(url);
+      if (res.data?.data?.resAmount && res.data?.data?.data) {
+        return {
+          resAmount: res.data.data.resAmount,
+          txData: res.data.data.data,
+          targetContract: res.data.data.to,
+          minReturnAmount: res.data.data.minReturnAmount
+        };
+      } else {
+
+      }
+    } catch (err) {
+      console.error("Error fetching route:", err.message);
+    }
+
+    if (i < retries) {
+      console.log(chalk.hex('#FF8C00')(`🔁 Mencoba Ulang ${i + 1}...`));
+      await delay(4000);
+    }
+  }
+  return null;
+}
+
 
 async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
   const routeData = await getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress);
