@@ -57,6 +57,10 @@ const erc20_abi = [
   "function balanceOf(address owner) view returns (uint256)"
 ];
 
+const addLiquidity_abi = [
+  "function addDSPLiquidity(address dspAddress, uint256 baseInAmount, uint256 quoteInAmount, uint256 baseMinAmount, uint256 quoteMinAmount, uint8 flag, uint256 deadLine)"
+];
+
 const inari_abi = [
   "function supply(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external returns (bool)",
   "function borrow(address asset, uint256 amount, uint256 interestRateMode, uint16 referralCode, address onBehalfOf) external returns (bool)",
