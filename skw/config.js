@@ -75,6 +75,18 @@ async function approve(wallet, fromTokenAddress, amountIn, SPENDER) {
   }
 }
 
+async function checkBalance(wallet, tokenAddress) {
+  try {
+    const Contract = new ethers.Contract(tokenAddress, erc20_abi, wallet);
+    const balance = await Contract.balanceOf(wallet.address);
+    const decimals = tokenDecimals[tokenAddress] || 18;
+    return parseFloat(ethers.formatUnits(balance, decimals));
+  } catch (error) {
+    console.error(`Failed to check balance for token ${tokenAddress}:`, error);
+    return 0;
+  }
+}
+
 module.exports = {
   WETH_ADDRESS,
   USDC_ADDRESS,
@@ -94,4 +106,5 @@ module.exports = {
   inari_abi,
   erc20_abi,
   approve,
+  checkBalance,
 };
