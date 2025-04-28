@@ -157,8 +157,9 @@ async function addLiquidity(wallet) {
     const flag = 0;
     const deadline = BigInt(Math.floor(Date.now() / 1000) + 600);
 
-    await approve(wallet, USDC_ADDRESS, lp_ROUTER, quoteInAmount);
-    await approve(wallet, USDT_ADDRESS, lp_ROUTER, baseInAmount)
+    await approve(wallet, USDC_ADDRESS, quoteInAmount, lp_ROUTER);
+    await approve(wallet, USDT_ADDRESS, baseInAmount, lp_ROUTER);
+
 
     console.log(chalk.hex('#20B2AA')(`🔁 Add Liquidity 1 USDC → 1 USDT`));
     const contract = new ethers.Contract(lp_ROUTER, Liquidity_abi, wallet);
@@ -182,7 +183,7 @@ async function addLiquidity(wallet) {
 
 async function rmLiquidity(wallet) {
   try {
-    const shareAmount = "005418";
+    const shareAmount = "1005418";
     const address_to = wallet.address;
     const baseMinAmount = "998899";
     const quoteMinAmount = "101039252";
@@ -195,10 +196,8 @@ async function rmLiquidity(wallet) {
       shareAmount,
       address_to,
       baseMinAmount,
-      quoteInAmount,
       quoteMinAmount,
       data,
-      flag,
       deadline
     );
 
