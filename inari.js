@@ -158,7 +158,7 @@ async function withdrawETH(wallet, wdETHAmount) {
   }
 }
 
-async function main() {
+async function lendingmain() {
   for (const privateKey of privateKeys) {
     const wallet = new ethers.Wallet(privateKey, provider);
 
@@ -176,4 +176,8 @@ async function main() {
   }
 }
 
-main();
+module.exports = { lendingmain };
+
+if (require.main === module) {
+  lendingmain();
+}
