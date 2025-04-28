@@ -94,6 +94,4 @@ module.exports = {
   inari_abi,
   erc20_abi,
   approve,
-  unwarpamount,
-  warpamount
 };
