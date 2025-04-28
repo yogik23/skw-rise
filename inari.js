@@ -14,6 +14,7 @@ const {
   wdETHAmount,
   borrowUSDT,
   supplyWETH,
+  approve,
 } = require('./skw/config');
 
 const RPC = "https://testnet.riselabs.xyz";
@@ -23,17 +24,6 @@ const privateKeys = fs.readFileSync(path.join(__dirname, "privatekey.txt"), "utf
   .split("\n")
   .map(k => k.trim())
   .filter(k => k.length > 0);
-
-async function approve(wallet, fromTokenAddress, SPENDER, amountIn) {
-  const token = new ethers.Contract(fromTokenAddress, erc20_abi, wallet);
-  const allowance = await token.allowance(wallet.address, SPENDER );
-  if (allowance < amountIn) {
-    console.log(chalk.hex('#20B2AA')(`🔓 Approving `));
-    const tx = await token.approve(SPENDER, ethers.MaxUint256);
-    await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Approved `));
-  }
-}
 
 async function supply(wallet, supplyWETH) {
   try {
@@ -45,7 +35,7 @@ async function supply(wallet, supplyWETH) {
     const supplyca = new ethers.Contract(inari_ROUTER, inari_abi, wallet);
 
     console.log(chalk.hex('#20B2AA')(`🔁 Supply ${supplyWETH} WETH`));
-    await approve(wallet, WETH_ADDRESS, inari_ROUTER, supplyWETH);
+    await approve(wallet, WETH_ADDRESS, supplyWETH, inari_ROUTER);
 
     const tx = await supplyca.supply(
       WETH_ADDRESS,
@@ -97,7 +87,7 @@ async function repay(wallet) {
     const amount = ethers.MaxUint256;
     const repayca = new ethers.Contract(inari_ROUTER, inari_abi, wallet);
     console.log(chalk.hex('#20B2AA')(`🔁 Repay MAX `));
-    await approve(wallet, USDT_ADDRESS, inari_ROUTER, amount);
+    await approve(wallet, USDT_ADDRESS, amount, inari_ROUTER);
 
     const tx = await repayca.repay(
       USDT_ADDRESS,
@@ -142,7 +132,7 @@ async function withdrawETH(wallet, wdETHAmount) {
     const amount = ethers.parseUnits(wdETHAmount, 18);
     const withdrawca = new ethers.Contract(inari_ROUTER, inari_abi, wallet);
 
-    await approve(wallet, WETH_ADDRESS, inari_ROUTER, amount);
+    await approve(wallet, WETH_ADDRESS, amount, inari_ROUTER);
     await setCollateral(wallet, false);
 
     console.log(chalk.hex('#20B2AA')(`🔁 Withdraw ${wdETHAmount} ETH`));
