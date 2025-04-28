@@ -15,7 +15,6 @@ const MOG_ADDRESS = "0x99dBE4AEa58E518C50a1c04aE9b48C9F6354612f";
 const RISE_ADDRESS = "0xd6e1afe5cA8D00A2EFC01B89997abE2De47fdfAf";
 const WBTC_ADDRESS = "0xF32D39ff9f6Aa7a7A64d7a4F00a54826Ef791a55";
 const inari_ROUTER = "0x81edb206Fd1FB9dC517B61793AaA0325c8d11A23";
-const dodo_ROUTER = "0x143bE32C854E4Ddce45aD48dAe3343821556D0c3";
 
 const tokenNames = {
   [WETH_ADDRESS]: "WETH",
@@ -95,6 +94,7 @@ module.exports = {
   wdETHAmount,
   inari_ROUTER,
   inari_abi,
+  erc20_abi,
   approve,
   unwarpamount,
   warpamount
