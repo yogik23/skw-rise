@@ -3,7 +3,6 @@ const { ethers } = require('ethers');
 const fs = require("fs");
 const path = require("path");
 const chalk = require('chalk');
-const { displayskw } = require('./skw/displayskw');
 
 const {
   WETH_ADDRESS,
@@ -172,9 +171,6 @@ async function mintNFT(wallet) {
 }
 
 async function main() {
-  console.clear();
-  displayskw();
-  
   for (const privateKey of privateKeys) {
     const wallet = new ethers.Wallet(privateKey, provider);
     console.log(chalk.cyan(`🔑 Wallet: ${wallet.address}\n`));
