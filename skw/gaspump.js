@@ -92,8 +92,16 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
   }
 }
 
+async function swapall() {
+  for (const pair of swapPairs) {
+    await approve(wallet, pair.from, pair.amount);
+    await swap(wallet, pair.amount, pair.from, pair.to);
+    await delay(3000);
+  }
+}
+
 module.exports = {
   deposit,
   withdraw,
-  swap,
+  swapall,
 };
