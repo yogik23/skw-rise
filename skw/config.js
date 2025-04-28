@@ -15,6 +15,7 @@ const WBTC_ADDRESS = "0xF32D39ff9f6Aa7a7A64d7a4F00a54826Ef791a55";
 const inari_ROUTER = "0x81edb206Fd1FB9dC517B61793AaA0325c8d11A23";
 const swap_ROUTER = "0x143bE32C854E4Ddce45aD48dAe3343821556D0c3";
 const lp_ROUTER = "0x0976e26eE276DC0703d046DB46d0ca8A1EeC3bAe";
+const rm_ROUTER = "0x8eB78173A8A4b53BC694490b9991145Fdc461099";
 
 const tokenNames = {
   [WETH_ADDRESS]: "WETH",
@@ -57,8 +58,9 @@ const erc20_abi = [
   "function balanceOf(address owner) view returns (uint256)"
 ];
 
-const addLiquidity_abi = [
-  "function addDSPLiquidity(address dspAddress, uint256 baseInAmount, uint256 quoteInAmount, uint256 baseMinAmount, uint256 quoteMinAmount, uint8 flag, uint256 deadLine)"
+const Liquidity_abi = [
+  "function addDSPLiquidity(address dspAddress, uint256 baseInAmount, uint256 quoteInAmount, uint256 baseMinAmount, uint256 quoteMinAmount, uint8 flag, uint256 deadLine)",
+  "function sellShares(uint256 shareAmount, address to, uint256 baseMinAmount, uint256 quoteMinAmount, bytes data, uint256 deadline)"
 ];
 
 const inari_abi = [
@@ -109,8 +111,12 @@ module.exports = {
   borrowUSDT,
   wdETHAmount,
   inari_ROUTER,
+  swap_ROUTER,
+  lp_ROUTER,
+  rm_ROUTER,
   inari_abi,
   erc20_abi,
+  Liquidity_abi,
   approve,
   checkBalance,
 };
