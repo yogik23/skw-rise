@@ -34,7 +34,10 @@ async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, 
   const amount = ethers.parseUnits(amountIn.toString(), 18).toString();
   const url = `https://api.dodoex.io/route-service/v2/widget/getdodoroute?chainId=11155931&deadLine=${deadline}&apikey=a37546505892e1a952&slippage=5&source=dodoV2AndMixWasm&toTokenAddress=${toTokenAddress}&fromTokenAddress=${fromTokenAddress}&userAddr=${wallet.address}&estimateGas=true&fromAmount=${amount}`;
 
-  console.log(chalk.hex('#7B68EE')(`🔍 Mendapatkan Kuota Swap`));
+  const toSymbol = tokenNames[toTokenAddress] || toTokenAddress;
+  const fromSymbol = tokenNames[fromTokenAddress] || fromTokenAddress;
+
+  console.log(chalk.hex('#7B68EE')(`🔍 Mendapatkan Kuota Swap  ${amountIn} ${fromSymbol} → ${toSymbol}`));
   for (let i = 0; i <= retries; i++) {
     try {
       const res = await axios.get(url);
