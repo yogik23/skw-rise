@@ -2,7 +2,6 @@ const { ethers } = require('ethers');
 const fs = require("fs");
 const path = require("path");
 const chalk = require('chalk');
-const { displayskw } = require('./skw/displayskw');
 
 const {
   WETH_ADDRESS,
