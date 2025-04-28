@@ -47,8 +47,8 @@ async function main() {
     const wallet = new ethers.Wallet(privateKey, provider);
     console.log(chalk.cyan(`🔑 Wallet: ${wallet.address}\n`));
 
-    await deposit(wallet, warpamount);
-    await delay(3000);
+    // await deposit(wallet, warpamount);
+    // await delay(3000);
 
     for (const pair of swapPairs) {
       await approve(wallet, pair.from, pair.amount, dodo_ROUTER);
