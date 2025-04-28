@@ -171,7 +171,7 @@ async function lendingmain() {
     await repay(wallet);
     await delay(3000);
 
-    await withdrawETH(wallet, wdETH);
+    await withdrawETH(wallet, wdETHAmount);
     await delay(3000);
   }
 }
