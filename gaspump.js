@@ -16,7 +16,9 @@ const {
   tokenNames,
   tokenDecimals,
   swapPairs,
-  delay
+  delay,
+  warpamount,
+  unwarpamount,
 } = require('./skw/config');
 
 const RPC = "https://testnet.riselabs.xyz";
@@ -62,11 +64,8 @@ async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, 
 async function approve(wallet, fromTokenAddress, amountIn) {
   const fromSymbol = tokenNames[fromTokenAddress] || fromTokenAddress;
   const SPENDER  = "0x143bE32C854E4Ddce45aD48dAe3343821556D0c3";
-  const approve_ABI = [
-      "function approve(address spender, uint256 amount) external returns (bool)",
-      "function allowance(address owner, address spender) view returns (uint256)"
-  ];
-  const token = new ethers.Contract(fromTokenAddress, approve_ABI, wallet);
+
+  const token = new ethers.Contract(fromTokenAddress, erc20_abi, wallet);
   const allowance = await token.allowance(wallet.address, SPENDER );
   if (allowance < amountIn) {
     console.log(chalk.hex('#20B2AA')(`🔓 Approving ${fromSymbol}...`));
@@ -76,16 +75,15 @@ async function approve(wallet, fromTokenAddress, amountIn) {
   }
 }
 
-async function deposit(wallet) {
+async function deposit(wallet, warpamount) {
   try {
-    const amount = "0.1";
     const warp_abi = ["function deposit() external payable"];
     const contract = new ethers.Contract(WETH_ADDRESS, warp_abi, wallet);
 
-    console.log(chalk.hex('#20B2AA')(`🔁 Warp ${amount} WETH → ${amount} ETH`));
+    console.log(chalk.hex('#20B2AA')(`🔁 Warp ${warpamount} WETH → ${warpamount} ETH`));
 
     const tx = await contract.deposit({
-      value: ethers.parseEther(amount),
+      value: ethers.parseEther(warpamount),
       gasLimit: 100_000,
     });
 
@@ -97,9 +95,8 @@ async function deposit(wallet) {
   }
 }
 
-async function withdraw(wallet) {
+async function withdraw(wallet, unwarpamount) {
   try {
-    const unwarpamount = "0.05";
     const amount = ethers.parseUnits(unwarpamount, 18); 
     const unwarp_abi = ["function OwnerTransferV7b711143(uint256) external"];
     const contract = new ethers.Contract(WETH_ADDRESS, unwarp_abi, wallet);
