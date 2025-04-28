@@ -77,13 +77,14 @@ async function approve(wallet, fromTokenAddress, amountIn) {
 
 async function deposit(wallet, warpamount) {
   try {
+    const amount = ethers.parseEther(warpamount);
     const warp_abi = ["function deposit() external payable"];
     const contract = new ethers.Contract(WETH_ADDRESS, warp_abi, wallet);
 
     console.log(chalk.hex('#20B2AA')(`🔁 Warp ${warpamount} WETH → ${warpamount} ETH`));
 
     const tx = await contract.deposit({
-      value: ethers.parseEther(warpamount),
+      value: amount,
       gasLimit: 100_000,
     });
 
