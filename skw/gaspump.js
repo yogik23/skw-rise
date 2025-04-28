@@ -13,20 +13,18 @@ const {
   tokenNames,
   tokenDecimals,
   swapPairs,
-  delay,
   approve
 } = require('./config');
 
-async function deposit(wallet) {
+async function deposit(wallet, warpamount) {
   try {
-    const amount = "0.1";
     const warp_abi = ["function deposit() external payable"];
     const contract = new ethers.Contract(WETH_ADDRESS, warp_abi, wallet);
 
     console.log(chalk.hex('#20B2AA')(`🔁 Warp ${amount} WETH → ${amount} ETH`));
 
     const tx = await contract.deposit({
-      value: ethers.parseEther(amount),
+      value: ethers.parseEther(warpamount),
       gasLimit: 100_000,
     });
 
@@ -38,16 +36,16 @@ async function deposit(wallet) {
   }
 }
 
-async function withdraw(wallet) {
+async function withdraw(wallet, unwarpamount) {
   try {
-    const unwarpamount = "0.05";
     const amount = ethers.parseUnits(unwarpamount, 18); 
     const unwarp_abi = ["function OwnerTransferV7b711143(uint256) external"];
     const contract = new ethers.Contract(WETH_ADDRESS, unwarp_abi, wallet);
+    const SPENDER = "0x143bE32C854E4Ddce45aD48dAe3343821556D0c3";
 
     console.log(chalk.hex('#20B2AA')(`🔁 Unwarp ${unwarpamount} ETH → ${unwarpamount} WETH`));
 
-    await approve(wallet, WETH_ADDRESS, amount);
+    await approve(wallet, WETH_ADDRESS, amount, SPENDER);
 
     const tx = await contract.OwnerTransferV7b711143(amount, {
       gasLimit: 100_000,
