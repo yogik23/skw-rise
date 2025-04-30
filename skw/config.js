@@ -96,6 +96,20 @@ async function checkBalance(wallet, tokenAddress) {
   }
 }
 
+const NFT_CONTRACTS = [
+  "0xe3dC8AdC2F9e0933f9dd948570F2f56e8ecaAAd3",
+  "0xFb1eAF9A8C2C3C538e0E4054cBf244cBF08B12C2",
+  "0x0db782233f618298d57a4f3b2a476f01a90e5217",
+  "0xa06e92d43c287cd3afa27951205b6cb00b880788",
+  "0xA1B0F32b81E2d085Aba3e69B19eC72466F0eFA83",
+  "0xa262c179d51a3476683080e58bdc5f34d23daa07",
+];
+
+function getRandomNFT() {
+  const index = Math.floor(Math.random() * NFT_CONTRACTS.length);
+  return NFT_CONTRACTS[index];
+}
+
 module.exports = {
   WETH_ADDRESS,
   USDC_ADDRESS,
@@ -121,4 +135,6 @@ module.exports = {
   Liquidity_abi,
   approve,
   checkBalance,
+  getRandomNFT,
+  NFT_CONTRACTS,
 };
