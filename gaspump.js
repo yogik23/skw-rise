@@ -258,7 +258,7 @@ async function swapmain() {
     console.log(chalk.cyan(`🔑 Wallet: ${wallet.address}`));
     const balance = await provider.getBalance(wallet.address);
     const ethBalance = ethers.formatEther(balance);
-    console.log(chalk.hex('#20B2AA')(`💰 Saldo ETH: ${ethBalance}`));
+    console.log(chalk.hex('#20B2AA')(`💰 Saldo ETH: ${ethBalance}\n`));
 
     console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
     await deposit(wallet);
