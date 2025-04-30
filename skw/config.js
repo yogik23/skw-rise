@@ -39,16 +39,14 @@ const tokenDecimals = {
 };
 
 const swapPairs = [
-  { from: WETH_ADDRESS, to: USDC_ADDRESS, amount: "0.00001" },
-  { from: WETH_ADDRESS, to: USDT_ADDRESS, amount: "0.00001" },
-  { from: WETH_ADDRESS, to: WBTC_ADDRESS, amount: "0.00001" },
-  { from: WETH_ADDRESS, to: RISE_ADDRESS, amount: "0.00001" },
-  { from: PEPE_ADDRESS, to: WETH_ADDRESS, amount: "200000" },
-  { from: RISE_ADDRESS, to: WETH_ADDRESS, amount: "30" },
-  { from: USDC_ADDRESS, to: WETH_ADDRESS, amount: "0.3" },
-  { from: USDT_ADDRESS, to: WETH_ADDRESS, amount: "0.3" },
-  { from: MOG_ADDRESS, to: WETH_ADDRESS, amount: "300" },
-  { from: WBTC_ADDRESS, to: WETH_ADDRESS, amount: "0.000001" },
+  { from: MOG_ADDRESS, to: WETH_ADDRESS, amount: "400" },
+  { from: PEPE_ADDRESS, to: WETH_ADDRESS, amount: "400000" },
+  { from: RISE_ADDRESS, to: WETH_ADDRESS, amount: "40" },
+  { from: USDC_ADDRESS, to: WETH_ADDRESS, amount: "1" },
+  { from: USDT_ADDRESS, to: WETH_ADDRESS, amount: "1" },
+  { from: WBTC_ADDRESS, to: WETH_ADDRESS, amount: "0.00001" },
+  { from: WETH_ADDRESS, to: USDC_ADDRESS, amount: "0.0001" },
+  { from: WETH_ADDRESS, to: USDT_ADDRESS, amount: "0.0001" },
 ];
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
