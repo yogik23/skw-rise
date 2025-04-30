@@ -127,8 +127,29 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
 
   const routeData = await getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress);
   if (!routeData) {
-    console.log(chalk.hex('#FF6347')(`❌ Failed to get route data\n`));
+    console.log(chalk.hex('#FF6347')(`❌ Gagal mendapatkan route data\n`));
     return;
+  }
+
+  const decimals = tokenDecimals[fromTokenAddress] || 18;
+  const parsedAmount = ethers.parseUnits(amountIn.toString(), decimals);
+
+  if (fromTokenAddress !== ethers.ZeroAddress) {
+    const tokenAbi = [
+      "function approve(address spender, uint256 amount) external returns (bool)",
+      "function allowance(address owner, address spender) view returns (uint256)"
+    ];
+    const tokenContract = new ethers.Contract(fromTokenAddress, tokenAbi, wallet);
+    const allowance = await tokenContract.allowance(wallet.address, routeData.targetContract);
+
+    if (allowance < parsedAmount) {
+      console.log(chalk.hex('#1E90FF')(`🪙 Approving ${amountIn} ${fromSymbol}...`));
+      const txApprove = await tokenContract.approve(routeData.targetContract, ethers.MaxUint256);
+      await txApprove.wait();
+      console.log(chalk.green(`✅ Approve berhasil.`));
+    } else {
+      console.log(chalk.gray(`✅ Token ${fromSymbol} sudah di-approve.`));
+    }
   }
 
   const toDecimals = tokenDecimals[toTokenAddress] || 18;
@@ -140,13 +161,13 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
     const tx = await wallet.sendTransaction({
       to: routeData.targetContract,
       data: routeData.txData,
-      value: fromTokenAddress === ethers.ZeroAddress ? ethers.parseEther(amountIn) : ethers.parseEther("0"),
-      gasLimit: 300_000
+      value: fromTokenAddress === ethers.ZeroAddress ? ethers.parseEther(amountIn) : 0,
+      gasLimit: 300_000,
     });
 
     console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Swap successful\n`));
+    console.log(chalk.hex('#66CDAA')(`✅ Swap berhasil!\n`));
   } catch (err) {
     console.error("❌ Swap failed:", err.reason || err.message);
   }
@@ -261,10 +282,9 @@ async function swapmain() {
     console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
     await deposit(wallet);
     await delay(3000);
-    
+
+    console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
     for (const pair of swapPairs) {
-      console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
-      await approve(wallet, pair.from, pair.amount, swap_ROUTER);
       await swap(wallet, pair.amount, pair.from, pair.to);
       await delay(10000);
     }
