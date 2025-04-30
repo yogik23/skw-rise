@@ -1,9 +1,9 @@
 const { ethers } = require('ethers');
 const chalk = require('chalk');
 
-const supplyWETH = "0.0001";
-const borrowUSDT = "0.001";
-const wdETHAmount = "0.00001";
+const supplyWETH = "0.00001";
+const borrowUSDT = "0.0001";
+const wdETHAmount = "0.000001";
 
 const WETH_ADDRESS = "0x4200000000000000000000000000000000000006";
 const USDC_ADDRESS = "0x8A93d247134d91e0de6f96547cB0204e5BE8e5D8";
