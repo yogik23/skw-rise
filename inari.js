@@ -29,7 +29,7 @@ async function supply(wallet, supplyWETH) {
   try {
     const WETHBALANCE = await checkBalance(wallet, WETH_ADDRESS);
     const balanceFormatted = parseFloat(WETHBALANCE).toFixed(4);
-    console.log(chalk.hex('#20B2AA')(`💰 Saldo WETH: ${balanceFormatted}`));
+    console.log(chalk.hex('#7B68EE')(`💰 Saldo WETH: ${balanceFormatted}`));
 
     const amount = ethers.parseUnits(supplyWETH, 18);
     const supplyca = new ethers.Contract(inari_ROUTER, inari_abi, wallet);
@@ -45,9 +45,9 @@ async function supply(wallet, supplyWETH) {
       { gasLimit: 500_000 }
     );
 
-    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    console.log(chalk.hex('#66CDAA')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Supply sukses!\n`));
+    console.log(chalk.hex('#32CD32')(`✅ Supply sukses!\n`));
   } catch (err) {
     console.log(chalk.red("❌ Error saat supply:"), err.reason || err.message);
   }
@@ -57,7 +57,7 @@ async function borrow(wallet, borrowUSDT) {
   try {
     const USDTBALANCE = await checkBalance(wallet, USDT_ADDRESS);
     const balanceFormatted = parseFloat(USDTBALANCE).toFixed(4);
-    console.log(chalk.hex('#20B2AA')(`💰 Saldo USDT: ${balanceFormatted}`));
+    console.log(chalk.hex('#7B68EE')(`💰 Saldo USDT: ${balanceFormatted}`));
 
     const amount = ethers.parseUnits(borrowUSDT, 8);
     const borrowca = new ethers.Contract(inari_ROUTER, inari_abi, wallet);
@@ -74,9 +74,9 @@ async function borrow(wallet, borrowUSDT) {
       { gasLimit: 500_000 }
     );
 
-    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    console.log(chalk.hex('#66CDAA')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Borrow sukses!\n`));
+    console.log(chalk.hex('#32CD32')(`✅ Borrow sukses!\n`));
   } catch (err) {
     console.log(chalk.red("❌ Error saat Borrow:"), err.reason || err.message);
   }
@@ -97,9 +97,9 @@ async function repay(wallet) {
       { gasLimit: 500_000 }
     );
 
-    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    console.log(chalk.hex('#66CDAA')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Repay sukses!\n`));
+    console.log(chalk.hex('#32CD32')(`✅ Repay sukses!\n`));
   } catch (err) {
     console.log(chalk.red("❌ Error saat Repay:"), err.reason || err.message);
   }
@@ -118,9 +118,9 @@ async function setCollateral(wallet, useAsCollateral = true) {
       { gasLimit: 500_000 }
     );
 
-    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    console.log(chalk.hex('#66CDAA')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ ${action} Collateral sukses!\n`));
+    console.log(chalk.hex('#32CD32')(`✅ ${action} Collateral sukses!\n`));
   } catch (err) {
     console.log(chalk.red(`❌ Error saat ${useAsCollateral ? "Set" : "Remove"} Collateral:`), err.reason || err.message);
   }
@@ -143,9 +143,9 @@ async function withdrawETH(wallet, wdETHAmount) {
       { gasLimit: 500_000 }
     );
 
-    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    console.log(chalk.hex('#66CDAA')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Withdraw sukses!\n`));
+    console.log(chalk.hex('#32CD32')(`✅ Withdraw sukses!\n`));
   } catch (err) {
     console.log(chalk.red("❌ Error saat Withdraw:"), err.reason || err.message);
   }
@@ -155,19 +155,19 @@ async function lendingmain() {
   for (const privateKey of privateKeys) {
     const wallet = new ethers.Wallet(privateKey, provider);
 
-    console.log(chalk.hex('#66CDAA')(`🚀 SUPPLY KE INARI`));
+    console.log(chalk.hex('#DC143C')(`🚀 SUPPLY KE INARI`));
     await supply(wallet, supplyWETH);
     await delay(3000);
 
-    console.log(chalk.hex('#66CDAA')(`🚀 BORROW KE INARI`));
+    console.log(chalk.hex('#DC143C')(`🚀 BORROW KE INARI`));
     await borrow(wallet, borrowUSDT);
     await delay(3000);
 
-    console.log(chalk.hex('#66CDAA')(`🚀 REPAY KE INARI`));
+    console.log(chalk.hex('#DC143C')(`🚀 REPAY KE INARI`));
     await repay(wallet);
     await delay(3000);
 
-    console.log(chalk.hex('#66CDAA')(`🚀 WITHDRAW DARI INARI`));
+    console.log(chalk.hex('#DC143C')(`🚀 WITHDRAW DARI INARI`));
     await withdrawETH(wallet, wdETHAmount);
     await delay(3000);
   }
