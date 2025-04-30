@@ -73,12 +73,12 @@ const inari_abi = [
 async function approve(wallet, fromTokenAddress, amountIn, SPENDER) {
   const fromSymbol = tokenNames[fromTokenAddress] || fromTokenAddress;
   const token = new ethers.Contract(fromTokenAddress, erc20_abi, wallet);
-  const allowance = await token.allowance(wallet.address, SPENDER );
-  if (allowance < amountIn) {
-    console.log(chalk.hex('#20B2AA')(`🔓 Approving ${fromSymbol}...`));
+  const allowance = await token.allowance(wallet.address, SPENDER);
+  if (allowance !== ethers.MaxUint256) {
+    console.log(chalk.hex('#20B2AA')(`🔓 Approving ${fromSymbol}`));
     const tx = await token.approve(SPENDER, ethers.MaxUint256);
     await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Approved ${fromSymbol}`));
+    console.log(chalk.hex('#66CDAA')(`✅ Berhasil Approv token`));
   }
 }
 
