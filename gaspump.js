@@ -54,7 +54,6 @@ async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, 
           spender: res.data.data.targetApproveAddr,
           txData: res.data.data.data,
           targetContract: res.data.data.to,
-          minReturnAmount: res.data.data.minReturnAmount
         };
       }
     } catch (err) {
@@ -132,21 +131,20 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
     return;
   }
 
+  const { resAmount, spender, targetContract, txData } = routeData;
 
-  await approve(wallet, fromTokenAddress, amountIn, routeData.spender);
+  await approve(wallet, fromTokenAddress, amountIn, spender);
 
   const toDecimals = tokenDecimals[toTokenAddress] || 18;
-  const formattedAmount = Number(routeData.resAmount).toFixed(8);
-
-  await approve(wallet, fromTokenAddress, amountIn, routeData.targetApproveAddr);
+  const formattedAmount = Number(resAmount).toFixed(8);
 
   console.log(chalk.hex('#20B2AA')(`🔁 Swap ${amountIn} ${fromSymbol} → ${formattedAmount} ${toSymbol}`));
 
   try {
     const tx = await wallet.sendTransaction({
-      to: routeData.targetContract,
-      data: routeData.txData,
-      value: fromTokenAddress === ethers.ZeroAddress ? ethers.parseEther(amountIn) : ethers.parseEther("0"),
+      to: targetContract,
+      data: txData,
+      value: 0,
       gasLimit: 300_000
     });
 
