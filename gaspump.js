@@ -131,6 +131,9 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
     return;
   }
 
+  const toDecimals = tokenDecimals[toTokenAddress] || 18;
+  const formattedAmount = (Number(routeData.resAmount) / 10 ** toDecimals).toFixed(8);
+
   console.log(chalk.hex('#20B2AA')(`🔁 Swap ${amountIn} ${fromSymbol} → ${formattedAmount} ${toSymbol}`));
 
   try {
