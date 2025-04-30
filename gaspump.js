@@ -33,17 +33,21 @@ const privateKeys = fs.readFileSync(path.join(__dirname, "privatekey.txt"), "utf
 async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, retries = 5) {
   const now = Math.floor(Date.now() / 1000);
   const deadline = now + 60 * 1;
-  const amount = ethers.parseUnits(amountIn.toString(), 18).toString();
+
+  const fromDecimals = tokenDecimals[fromTokenAddress] || 18;
+  const amount = ethers.parseUnits(amountIn.toString(), fromDecimals).toString();
+
   const url = `https://api.dodoex.io/route-service/v2/widget/getdodoroute?chainId=11155931&deadLine=${deadline}&apikey=a37546505892e1a952&slippage=5&source=dodoV2AndMixWasm&toTokenAddress=${toTokenAddress}&fromTokenAddress=${fromTokenAddress}&userAddr=${wallet.address}&estimateGas=false&fromAmount=${amount}`;
 
   const toSymbol = tokenNames[toTokenAddress] || toTokenAddress;
   const fromSymbol = tokenNames[fromTokenAddress] || fromTokenAddress;
 
-  console.log(chalk.hex('#7B68EE')(`🔍 Mendapatkan Kuota Swap  ${amountIn} ${fromSymbol} → ${toSymbol}`));
+  console.log(chalk.hex('#7B68EE')(`🔍 Mendapatkan Kuota Swap ${amountIn} ${fromSymbol} → ${toSymbol}`));
+
   for (let i = 0; i <= retries; i++) {
     try {
+      await delay(3000);
       const res = await axios.get(url);
-      await delay(10000);
       if (res.data?.data?.resAmount && res.data?.data?.data) {
         return {
           resAmount: res.data.data.resAmount,
@@ -51,8 +55,6 @@ async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, 
           targetContract: res.data.data.to,
           minReturnAmount: res.data.data.minReturnAmount
         };
-      } else {
-
       }
     } catch (err) {
       console.error("Error fetching route:", err.message);
@@ -60,7 +62,7 @@ async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, 
 
     if (i < retries) {
       console.log(chalk.hex('#FF8C00')(`🔁 Mencoba Ulang ${i + 1}...`));
-      await delay(2000);
+      await delay(4000);
     }
   }
   return null;
