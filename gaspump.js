@@ -19,6 +19,7 @@ const {
   swapPairs,
   delay,
   approve,
+  getRandomNFT,
 } = require('./skw/config');
 
 const RPC = "https://testnet.riselabs.xyz";
@@ -136,7 +137,7 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
     const tx = await wallet.sendTransaction({
       to: routeData.targetContract,
       data: routeData.txData,
-      value: fromTokenAddress === ethers.ZeroAddress ? ethers.parseEther(amountIn) : ethers.parseEther("0"), // kalau native token, kirim value
+      value: fromTokenAddress === ethers.ZeroAddress ? ethers.parseEther(amountIn) : ethers.parseEther("0"),
       gasLimit: 300_000
     });
 
@@ -223,7 +224,7 @@ async function rmLiquidity(wallet) {
 
 async function mintNFT(wallet) {
   try {
-    const NFTca = "0xA1B0F32b81E2d085Aba3e69B19eC72466F0eFA83";
+    const NFTca = getRandomNFT();
     const mintnft_abi = ["function mint(uint256 amount) public payable"];
     const mintnftca = new ethers.Contract(NFTca, mintnft_abi, wallet);
     const amountToMint = 1;
@@ -234,7 +235,7 @@ async function mintNFT(wallet) {
     console.log(chalk.hex('#20B2AA')(`🔁 Mint NFT`));
 
     const tx = await mintnftca.mint(amountToMint, {
-      value: totalPrice, // kirim ETH
+      value: totalPrice,
       gasLimit: 500_000
     });
 
