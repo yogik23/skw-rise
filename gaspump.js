@@ -51,6 +51,7 @@ async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, 
       if (res.data?.data?.resAmount && res.data?.data?.data) {
         return {
           resAmount: res.data.data.resAmount,
+          spender: res.data.data.targetApproveAddr,
           txData: res.data.data.data,
           targetContract: res.data.data.to,
           minReturnAmount: res.data.data.minReturnAmount
@@ -131,13 +132,8 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
     return;
   }
 
-  const spender = routeData.targetApproveAddr || routeData.targetContract;
-  if (!spender) {
-    console.log("❌ Gagal mendapatkan spender address");
-    return;
-  }
 
-  await approve(wallet, fromTokenAddress, amountIn, spender);
+  await approve(wallet, fromTokenAddress, amountIn, routeData.spender);
 
   const toDecimals = tokenDecimals[toTokenAddress] || 18;
   const formattedAmount = Number(routeData.resAmount).toFixed(8);
@@ -271,9 +267,10 @@ async function swapmain() {
     console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
     await deposit(wallet);
     await delay(3000);
-
-    console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
+    
     for (const pair of swapPairs) {
+      console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
+      await approve(wallet, pair.from, pair.amount, swap_ROUTER);
       await swap(wallet, pair.amount, pair.from, pair.to);
       await delay(10000);
     }
