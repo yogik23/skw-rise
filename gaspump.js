@@ -265,9 +265,9 @@ async function swapmain() {
     console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
     await deposit(wallet);
     await delay(3000);
-    
+
+    console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
     for (const pair of swapPairs) {
-      console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
       await approve(wallet, pair.from, pair.amount, swap_ROUTER);
       await swap(wallet, pair.amount, pair.from, pair.to);
       await delay(10000);
