@@ -235,7 +235,7 @@ async function mintNFT(wallet) {
     const mintnft_abi = ["function mint(uint256 amount) public payable"];
     const mintnftca = new ethers.Contract(NFTca, mintnft_abi, wallet);
     const amountToMint = 1;
-    const pricePerNFT = "0.000006";
+    const pricePerNFT = "0.000007";
 
     const totalPrice = ethers.parseEther(pricePerNFT) * BigInt(amountToMint);
 
