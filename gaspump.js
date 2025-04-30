@@ -68,7 +68,7 @@ async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, 
 
 async function deposit(wallet) {
   try {
-    const warpamount = "0.001";
+    const warpamount = "0.00005";
     const amount = ethers.parseUnits(warpamount);
     const warp_abi = ["function deposit() external payable"];
     const contract = new ethers.Contract(WETH_ADDRESS, warp_abi, wallet);
