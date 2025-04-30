@@ -43,6 +43,7 @@ async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, 
   for (let i = 0; i <= retries; i++) {
     try {
       const res = await axios.get(url);
+      await delay(10000);
       if (res.data?.data?.resAmount && res.data?.data?.data) {
         return {
           resAmount: res.data.data.resAmount,
@@ -59,7 +60,7 @@ async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, 
 
     if (i < retries) {
       console.log(chalk.hex('#FF8C00')(`🔁 Mencoba Ulang ${i + 1}...`));
-      await delay(4000);
+      await delay(2000);
     }
   }
   return null;
