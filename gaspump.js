@@ -131,6 +131,14 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
     return;
   }
 
+  const spender = routeData.targetApproveAddr || routeData.targetContract;
+  if (!spender) {
+    console.log("❌ Gagal mendapatkan spender address");
+    return;
+  }
+
+  await approve(wallet, fromTokenAddress, amountIn, spender);
+
   const toDecimals = tokenDecimals[toTokenAddress] || 18;
   const formattedAmount = Number(routeData.resAmount).toFixed(8);
 
