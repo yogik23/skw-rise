@@ -131,18 +131,6 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
     return;
   }
 
-  const toDecimals = tokenDecimals[toTokenAddress] || 18;
-  const rawAmountOut = BigInt(routeData.resAmount);
-  const formattedAmount = (Number(routeData.resAmount) / 10 ** toDecimals).toFixed(8);
-
-  console.log(chalk.gray(`🔎 Raw resAmount (wei): ${routeData.resAmount}`));
-  console.log(chalk.gray(`🔎 Estimasi real ${toSymbol}: ${Number(routeData.resAmount) / 10 ** toDecimals}`));
-
-  if (rawAmountOut < BigInt(1e9)) {
-    console.log(chalk.hex('#FF6347')(`⚠️  Estimasi output terlalu kecil (<1 Gwei), transaksi dibatalkan!\n`));
-    return;
-  }
-
   console.log(chalk.hex('#20B2AA')(`🔁 Swap ${amountIn} ${fromSymbol} → ${formattedAmount} ${toSymbol}`));
 
   try {
