@@ -34,7 +34,7 @@ async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, 
   const now = Math.floor(Date.now() / 1000);
   const deadline = now + 60 * 1;
   const amount = ethers.parseUnits(amountIn.toString(), 18).toString();
-  const url = `https://api.dodoex.io/route-service/v2/widget/getdodoroute?chainId=11155931&deadLine=${deadline}&apikey=a37546505892e1a952&slippage=5&source=dodoV2AndMixWasm&toTokenAddress=${toTokenAddress}&fromTokenAddress=${fromTokenAddress}&userAddr=${wallet.address}&estimateGas=true&fromAmount=${amount}`;
+  const url = `https://api.dodoex.io/route-service/v2/widget/getdodoroute?chainId=11155931&deadLine=${deadline}&apikey=a37546505892e1a952&slippage=5&source=dodoV2AndMixWasm&toTokenAddress=${toTokenAddress}&fromTokenAddress=${fromTokenAddress}&userAddr=${wallet.address}&estimateGas=false&fromAmount=${amount}`;
 
   const toSymbol = tokenNames[toTokenAddress] || toTokenAddress;
   const fromSymbol = tokenNames[fromTokenAddress] || fromTokenAddress;
