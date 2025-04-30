@@ -42,7 +42,7 @@ async function getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress, 
   const toSymbol = tokenNames[toTokenAddress] || toTokenAddress;
   const fromSymbol = tokenNames[fromTokenAddress] || fromTokenAddress;
 
-  console.log(chalk.hex('#7B68EE')(`🔍 Mendapatkan Kuota Swap ${amountIn} ${fromSymbol} → ${toSymbol}`));
+  console.log(chalk.hex('#20B2AA')(`🔍 Mendapatkan Kuota Swap ${amountIn} ${fromSymbol} → ${toSymbol}`));
 
   for (let i = 0; i <= retries; i++) {
     try {
@@ -82,9 +82,9 @@ async function deposit(wallet) {
       gasLimit: 100_000,
     });
 
-    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    console.log(chalk.hex('#66CDAA')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     const receipt = await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Warp successful\n`));
+    console.log(chalk.hex('#32CD32')(`✅ Warp successful\n`));
   } catch (err) {
     console.log(chalk.red("❌ Error during deposit:"), err.reason || err.message);
   }
@@ -94,7 +94,7 @@ async function withdraw(wallet) {
   try {
     const WETHBALANCE = await checkBalance(wallet, WETH_ADDRESS);
     const balanceFormatted = parseFloat(WETHBALANCE).toFixed(4);
-    console.log(chalk.hex('#20B2AA')(`💰 Saldo WETH: ${balanceFormatted}`));
+    console.log(chalk.hex('#7B68EE')(`💰 Saldo WETH: ${balanceFormatted}`));
 
     const unwarpamount = "0.00005";
     const amount = ethers.parseUnits(unwarpamount, 18); 
@@ -109,9 +109,9 @@ async function withdraw(wallet) {
       gasLimit: 100_000,
     });
 
-    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    console.log(chalk.hex('#66CDAA')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     const receipt = await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Unwarp successful\n`));
+    console.log(chalk.hex('#32CD32')(`✅ Unwarp successful\n`));
   } catch (err) {
     console.log(chalk.red("❌ Error during withdraw:"), err.reason || err.message);
   }
@@ -123,7 +123,7 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
 
   const CEK_BALANCE = await checkBalance(wallet, fromTokenAddress);
   const BALANCE = parseFloat(CEK_BALANCE).toFixed(8);
-  console.log(chalk.hex('#20B2AA')(`💰 Saldo ${fromSymbol}: ${BALANCE}`));
+  console.log(chalk.hex('#7B68EE')(`💰 Saldo ${fromSymbol}: ${BALANCE}`));
 
   const routeData = await getRouteData(wallet, amountIn, fromTokenAddress, toTokenAddress);
   if (!routeData) {
@@ -148,9 +148,9 @@ async function swap(wallet, amountIn, fromTokenAddress, toTokenAddress) {
       gasLimit: 300_000
     });
 
-    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    console.log(chalk.hex('#66CDAA')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Swap successful\n`));
+    console.log(chalk.hex('#32CD32')(`✅ Swap successful\n`));
   } catch (err) {
     console.error("❌ Swap failed:", err.reason || err.message);
   }
@@ -160,10 +160,10 @@ async function addLiquidity(wallet) {
   try {
     const CEK_BALANCEUSDT = await checkBalance(wallet, USDT_ADDRESS);
     const BALANCEUSDT = parseFloat(CEK_BALANCEUSDT).toFixed(4);
-    console.log(chalk.hex('#20B2AA')(`💰 Saldo USDT: ${BALANCEUSDT}`));
     const CEK_BALANCEUSDC = await checkBalance(wallet, USDC_ADDRESS);
     const BALANCEUSDC = parseFloat(CEK_BALANCEUSDC).toFixed(4);
-    console.log(chalk.hex('#20B2AA')(`💰 Saldo USDC: ${BALANCEUSDC}`));
+    console.log(chalk.hex('#7B68EE')(`💰 Saldo USDT: ${BALANCEUSDT}`));
+    console.log(chalk.hex('#7B68EE')(`💰 Saldo USDC: ${BALANCEUSDC}`));
     
     const dspAddress = "0x8eB78173A8A4b53BC694490b9991145Fdc461099";
     const baseInAmount = "1100000";
@@ -189,9 +189,9 @@ async function addLiquidity(wallet) {
       deadline
     );
 
-    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    console.log(chalk.hex('#66CDAA')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Add Liquidity successful\n`));
+    console.log(chalk.hex('#32CD32')(`✅ Add Liquidity successful\n`));
   } catch (error) {
     console.error(chalk.red(`❌ Error in addLiquidity: ${error.message || error}`));
   }
@@ -201,7 +201,7 @@ async function rmLiquidity(wallet) {
   try {
     const CEK_BALANCELP = await checkBalance(wallet, DLP_ADDRESS);
     const BALANCELP = parseFloat(CEK_BALANCELP).toFixed(4);
-    console.log(chalk.hex('#20B2AA')(`💰 Saldo DLP: $${BALANCELP}`));
+    console.log(chalk.hex('#7B68EE')(`💰 Saldo DLP: $${BALANCELP}`));
     
     const shareAmount = "1005418";
     const address_to = wallet.address;
@@ -221,9 +221,9 @@ async function rmLiquidity(wallet) {
       deadline
     );
 
-    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    console.log(chalk.hex('#66CDAA')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ REMOVE Liquidity successful\n`));
+    console.log(chalk.hex('#32CD32')(`✅ REMOVE Liquidity successful\n`));
   } catch (error) {
     console.error(chalk.red(`❌ Error in addLiquidity: ${error.message || error}`));
   }
@@ -246,9 +246,9 @@ async function mintNFT(wallet) {
       gasLimit: 500_000
     });
 
-    console.log(chalk.hex('#FF8C00')(`⏳ Tx dikirim!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+    console.log(chalk.hex('#66CDAA')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
     await tx.wait();
-    console.log(chalk.hex('#66CDAA')(`✅ Mint NFT sukses!\n`));
+    console.log(chalk.hex('#32CD32')(`✅ Mint NFT sukses!\n`));
   } catch (err) {
     console.error("❌ Mint NFT failed:", err.reason || err.message);
   }
@@ -257,35 +257,35 @@ async function mintNFT(wallet) {
 async function swapmain() {
   for (const privateKey of privateKeys) {
     const wallet = new ethers.Wallet(privateKey, provider);
-    console.log(chalk.cyan(`🔑 Wallet: ${wallet.address}`));
+    console.log(chalk.hex('#800080')(`🌐 RISE SEPOLIA ${wallet.address}`));
     const balance = await provider.getBalance(wallet.address);
     const ethBalance = ethers.formatEther(balance);
-    console.log(chalk.hex('#20B2AA')(`💰 Saldo ETH: ${ethBalance}\n`));
+    console.log(chalk.hex('#800080')(`💰 Saldo ETH: ${ethBalance}\n`));
 
-    console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
+    console.log(chalk.hex('#DC143C')(`🚀 SWAP di GASPUMP`));
     await deposit(wallet);
     await delay(3000);
 
-    console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
+    console.log(chalk.hex('#DC143C')(`🚀 SWAP di GASPUMP`));
     for (const pair of swapPairs) {
       await approve(wallet, pair.from, pair.amount, swap_ROUTER);
       await swap(wallet, pair.amount, pair.from, pair.to);
       await delay(10000);
     }
 
-    console.log(chalk.hex('#66CDAA')(`🚀 ADD LIQUIDITY di GASPUMP`));
+    console.log(chalk.hex('#DC143C')(`🚀 ADD LIQUIDITY di GASPUMP`));
     await addLiquidity(wallet);
     await delay(3000);
 
-    console.log(chalk.hex('#66CDAA')(`🚀 REMOVE LIQUIDITY di GASPUMP`));
+    console.log(chalk.hex('#DC143C')(`🚀 REMOVE LIQUIDITY di GASPUMP`));
     await rmLiquidity(wallet);
     await delay(3000);
 
-    console.log(chalk.hex('#66CDAA')(`🚀 SWAP di GASPUMP`));
+    console.log(chalk.hex('#DC143C')(`🚀 SWAP di GASPUMP`));
     await withdraw(wallet);
     await delay(3000);
 
-    console.log(chalk.hex('#66CDAA')(`🚀 MINT NFT DI OMNIHUB`));
+    console.log(chalk.hex('#DC143C')(`🚀 MINT NFT DI OMNIHUB`));
     await mintNFT(wallet);
     await delay(3000);
 
