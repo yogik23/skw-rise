@@ -38,15 +38,42 @@ const tokenDecimals = {
   [WBTC_ADDRESS]: 18,
 };
 
+function randomAmount(min, max, decimals) {
+  const minNum = parseFloat(min);
+  const maxNum = parseFloat(max);
+  const random = Math.random() * (maxNum - minNum) + minNum;
+  return Number(random.toFixed(decimals)).toString();
+}
+
 const swapPairs = [
-  { from: MOG_ADDRESS, to: WETH_ADDRESS, amount: "400" },
-  { from: PEPE_ADDRESS, to: WETH_ADDRESS, amount: "400000" },
-  { from: RISE_ADDRESS, to: WETH_ADDRESS, amount: "40" },
-  { from: USDC_ADDRESS, to: WETH_ADDRESS, amount: "1" },
-  { from: USDT_ADDRESS, to: WETH_ADDRESS, amount: "1" },
-  { from: WBTC_ADDRESS, to: WETH_ADDRESS, amount: "0.00001" },
-  { from: WETH_ADDRESS, to: USDC_ADDRESS, amount: "0.0001" },
-  { from: WETH_ADDRESS, to: USDT_ADDRESS, amount: "0.0001" },
+  { from: WETH_ADDRESS, to: RISE_ADDRESS, amount: randomAmount(0.0001, 0.0005, 4) },
+  { from: USDT_ADDRESS, to: WETH_ADDRESS, amount: randomAmount(0.2, 0.8, 1) },
+  { from: USDT_ADDRESS, to: RISE_ADDRESS, amount: randomAmount(0.2, 0.8, 1) },
+  { from: MOG_ADDRESS, to: WETH_ADDRESS, amount: randomAmount(40, 150, 0) },
+  { from: WETH_ADDRESS, to: MOG_ADDRESS, amount: randomAmount(0.0001, 0.0005, 4) },
+  { from: MOG_ADDRESS, to: RISE_ADDRESS, amount: randomAmount(10, 50, 0) },
+  { from: MOG_ADDRESS, to: USDC_ADDRESS, amount: randomAmount(10, 50, 0) },
+  { from: USDC_ADDRESS, to: MOG_ADDRESS, amount: randomAmount(0.2, 0.8, 1) },
+  { from: WBTC_ADDRESS, to: WETH_ADDRESS, amount: randomAmount(0.00001, 0.00005, 5) },
+  { from: MOG_ADDRESS, to: USDT_ADDRESS, amount: randomAmount(10, 50, 0) },
+  { from: USDC_ADDRESS, to: RISE_ADDRESS, amount: randomAmount(0.2, 0.8, 1) },
+  { from: USDC_ADDRESS, to: MOG_ADDRESS, amount: randomAmount(0.2, 0.8, 1) },
+  { from: PEPE_ADDRESS, to: WETH_ADDRESS, amount: randomAmount(5000, 50000, 0) },
+  { from: RISE_ADDRESS, to: USDC_ADDRESS, amount: randomAmount(5, 40, 0) },
+  { from: USDT_ADDRESS, to: USDC_ADDRESS, amount: randomAmount(0.2, 0.8, 1) },
+  { from: WETH_ADDRESS, to: PEPE_ADDRESS, amount: randomAmount(0.0001, 0.0005, 4) },
+  { from: WBTC_ADDRESS, to: USDC_ADDRESS, amount: randomAmount(0.00001, 0.00005, 5) },
+  { from: PEPE_ADDRESS, to: RISE_ADDRESS, amount: randomAmount(2000, 15000, 0) },
+  { from: RISE_ADDRESS, to: WETH_ADDRESS, amount: randomAmount(5, 40, 0) },
+  { from: PEPE_ADDRESS, to: USDC_ADDRESS, amount: randomAmount(2000, 15000, 0) },
+  { from: PEPE_ADDRESS, to: USDT_ADDRESS, amount: randomAmount(2000, 15000, 0) },
+  { from: USDT_ADDRESS, to: PEPE_ADDRESS, amount: randomAmount(0.2, 0.8, 1) },
+  { from: RISE_ADDRESS, to: RISE_ADDRESS, amount: randomAmount(5, 40, 0) },
+  { from: USDC_ADDRESS, to: WETH_ADDRESS, amount: randomAmount(0.2, 0.8, 1) },
+  { from: USDC_ADDRESS, to: USDT_ADDRESS, amount: randomAmount(0.2, 0.8, 1) },
+  { from: RISE_ADDRESS, to: USDT_ADDRESS, amount: randomAmount(5, 40, 0) },
+  { from: WETH_ADDRESS, to: USDC_ADDRESS, amount: randomAmount(0.0001, 0.0005, 4) },
+  { from: WETH_ADDRESS, to: USDT_ADDRESS, amount: randomAmount(0.0001, 0.0005, 4) },
 ];
 
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -100,6 +127,15 @@ const NFT_CONTRACTS = [
   "0x0db782233f618298d57a4f3b2a476f01a90e5217",
   "0xa06e92d43c287cd3afa27951205b6cb00b880788",
   "0xa262c179d51a3476683080e58bdc5f34d23daa07",
+  "0x4dad1da749d4f5e894c419ebe46f57ce324130dc",
+  "0x9456b4d37d0b18cffe9589538bccf03286250c33",
+  "0x1c0426864f289a2e6e4c347800eaf893b9bf6076",
+  "0x14954e10bf835ff402ae1ba02cd5f6371a0e65d0",
+  "0xd76b8d0ade52761bf4f6672f9ea210771b02bc8d",
+  "0x3e44a240dcdeb7329549448b9b62c22560b8423a",
+  "0xa74a648c29788e2257ea3b60a5e713c3ca56db3c",
+  "0xd51af36edf19e3136e0adead0b6d4c6d791d94c9",
+  "0xa4a9a5f50387b444386a6a1f685eb61148def345",
 ];
 
 function getRandomNFT() {
