@@ -386,8 +386,8 @@ async function withdrawETH(wallet) {
   }
 }
 
-async function sendTG(shortaddress, txCount) {
-  const message = `**${shortaddress} => ${txCount}**`;
+async function sendTG(address, txCount) {
+  const message = `*${address} ➡️  ${txCount} tx*`;
   try {
     const response = await axios.post(
       `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
@@ -397,11 +397,10 @@ async function sendTG(shortaddress, txCount) {
         parse_mode: "MarkdownV2",
       }
     );
-
     console.log(`✅ Message sent to Telegram successfully!`);
     return response.data;
   } catch (error) {
-    console.error(`❌ Error sending message to Telegram: ${error.message}`);
+    console.error(`❌ Error sending message to Telegram: ${error.response?.data?.description || error.message}`);
     return null;
   }
 }
@@ -464,9 +463,8 @@ async function main() {
     await delay(3000);
 
     const txCount = await provider.getTransactionCount(wallet.address);
-    const shortaddress = `${wallet.address.slice(0, 4)}...${wallet.address.slice(-4)}`;
-    await sendTG(shortaddress, txCount);
-    console.log(chalk.hex('#66CDAA')(`🟦  ${shortaddress} => Jumlah transaksi: ${txCount}\n`));
+    await sendTG(wallet.address, txCount);
+    console.log(chalk.hex('#66CDAA')(`🟦  ${wallet.address} => Jumlah transaksi: ${txCount}\n`));
   }
 }
 
