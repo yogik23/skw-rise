@@ -386,8 +386,14 @@ async function withdrawETH(wallet) {
   }
 }
 
+function escapeMarkdownV2(text) {
+  return text.replace(/[_*[\]()~`>#+=|{}.!\\-]/g, '\\$&');
+}
+
 async function sendTG(address, txCount) {
-  const message = `*${address} ➡️  ${txCount} tx*`;
+  const date = escapeMarkdownV2(new Date().toISOString().split('T')[0]);
+  const message = `📅 *${date}*\n💦 *${address}*\n➡️ *Total TX: ${txCount}*`;
+
   try {
     const response = await axios.post(
       `https://api.telegram.org/bot${process.env.BOT_TOKEN}/sendMessage`,
