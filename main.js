@@ -3,6 +3,7 @@ const { ethers } = require('ethers');
 const fs = require("fs");
 const path = require("path");
 const chalk = require('chalk');
+const cron = require('node-cron');
 require("dotenv").config();
 const { displayskw } = require('./skw/displayskw');
 
@@ -446,7 +447,7 @@ async function swapgaspump(wallet) {
   await delay(5000);
 }
 
-async function main() {
+async function startBot() {
   console.clear();
   displayskw();
   const wallets = [];
@@ -472,6 +473,20 @@ async function main() {
     await sendTG(wallet.address, txCount);
     console.log(chalk.hex('#66CDAA')(`🟦  ${wallet.address} => Jumlah transaksi: ${txCount}\n`));
   }
+}
+
+async function main() {
+    cron.schedule('0 1 * * *', async () => { 
+        await startBot();
+        console.log();
+        console.log(chalk.hex('#FF00FF')(`Cron AKTIF`));
+        console.log(chalk.hex('#FF1493')('Jam 08:00 WIB Autobot Akan Run'));
+    });
+
+    await startBot();
+    console.log();
+    console.log(chalk.hex('#FF00FF')(`Cron AKTIF`));
+    console.log(chalk.hex('#FF1493')('Jam 08:00 WIB Autobot Akan Run'));
 }
 
 main();
