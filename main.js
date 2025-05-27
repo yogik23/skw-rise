@@ -447,6 +447,24 @@ async function swapgaspump(wallet) {
   await delay(5000);
 }
 
+async function onChainGM(wallet) {
+  try {
+    const CONTRACT_ADDRESS = "0x59c27c39A126a9B5eCADdd460C230C857e1Deb35";
+    const abi = ["function onChainGM() external payable"];
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, wallet);
+    const fee = ethers.parseEther("0.000029");
+
+    console.log(chalk.hex('#20B2AA')(`🔁 Mengirim transaksi onChainGM`));
+    const tx = await contract.onChainGM({ value: fee, gasLimit: 300_000 });
+    console.log(chalk.hex('#66CDAA')(`⏳ Tx dikirim ke blokchain!\n⛓️‍💥 https://explorer.testnet.riselabs.xyz/tx/${tx.hash}`));
+
+    await tx.wait();
+    console.log(chalk.hex('#32CD32')(`✅ onChainGM successful\n`));
+  } catch (error) {
+    console.error("❌ Gagal menjalankan onChainGM:", error.message);
+  }
+}
+
 async function startBot() {
   console.clear();
   displayskw();
@@ -458,6 +476,9 @@ async function startBot() {
     const ethBalance = ethers.formatEther(balance);
     console.log(chalk.hex('#800080')(`🌐 RISE SEPOLIA ${wallet.address}`));
     console.log(chalk.hex('#800080')(`💰 Saldo ETH: ${ethBalance}\n`));
+
+    await onChainGM(wallet);
+    await delay(3000);
 
     console.log(chalk.hex('#DC143C')(`🚀 INTERAKSI di GASPUMP`));
     await swapgaspump(wallet);
